@@ -1,24 +1,16 @@
 const { check, validationResult } = require('express-validator');
 
 const validateRegisterUser = [
-   check('email')
-      .trim()
-      .normalizeEmail()
-      .not()
-      .isEmpty()
-      .withMessage('آدرس ایمیل معتبر نیست.')
-      .bail(),
-   check('password')
-      .trim()
-      .not()
-      .isEmpty()
-      .withMessage('رمز عبور معتبر نیست')
-      .bail(),
+   check('email', 'Your email is not valid').not().isEmpty(),
+   check('password', 'Your password must be at least 5 characters').not().isEmpty(),
    (req, res, next) => {
       const errors = validationResult(req);
-      if (!errors.isEmpty())
-         return res.status(422).json({ errors: errors.array() });
-      next();
+      if (!errors.isEmpty()) {
+         return res.status(422).json(errors.array());
+      } else {
+         next();
+      }
+
    },
 ];
 
